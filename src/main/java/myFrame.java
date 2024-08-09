@@ -1,11 +1,16 @@
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.text.NumberFormatter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.text.NumberFormat;
+import java.util.Date;
+import java.util.Locale;
+
 
 public class myFrame extends JFrame implements ActionListener {
     
@@ -14,6 +19,7 @@ public class myFrame extends JFrame implements ActionListener {
         this.setResizable(false);
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         this.setSize(1000, 600);
+
 
 
         ImageIcon titleLogo = new ImageIcon("src/main/resources/titleLogo.png");
@@ -41,92 +47,125 @@ public class myFrame extends JFrame implements ActionListener {
         //headerLabel.setHorizontalAlignment(SwingConstants.CENTER);
         header.add(headerLabel);
 
+
+        //Content Panel
+
+        // Create a NumberFormat instance for integers
+        NumberFormat numberFormat = NumberFormat.getIntegerInstance(Locale.getDefault());
+        numberFormat.setGroupingUsed(false);
+        NumberFormatter numberFormatter = new NumberFormatter(numberFormat);
+        numberFormatter.setMinimum(0);
+        numberFormatter.setAllowsInvalid(false); // Prevents invalid input
+
+
         JPanel content = new JPanel();
         content.setBackground(Color.pink);
         content.setLayout(new GridLayout(0,2,0,10));// 0 rows for dynamic adding
 
         //Form Elements
 
+        UIManager.put("Label.font", new Font("Arial", Font.BOLD, 20));
+
         // HEADER
         content.add(new JLabel("Header")); // Header label
         content.add(new JLabel("")); // Empty cell to fill space
 
         content.add(new JLabel("Truck Serial Number"));
-        content.add(new JTextField(20));
+        JTextField truckSerialNumber = new JTextField();
+        content.add(truckSerialNumber);
 
         content.add(new JLabel("Truck Model"));
-        content.add(new JTextField(20));
+        JTextField truckModel = new JTextField();
+        content.add(truckModel);
 
         content.add(new JLabel("Inspection ID"));
-        content.add(new JLabel("Auto-generated")); // Display-only, example
+        content.add(new JLabel("Auto-generated after upload")); // Display-only
 
         content.add(new JLabel("Inspector Name"));
-        content.add(new JTextField(20));
+        JTextField inspectorName= new JTextField();
+        content.add(inspectorName);
 
         content.add(new JLabel("Inspection Employee ID"));
-        content.add(new JTextField(20));
+        JFormattedTextField empID = new JFormattedTextField(numberFormatter);
+        content.add(empID);
 
         content.add(new JLabel("Date & Time of Inspection"));
-        content.add(new JTextField(20)); // Consider using a date/time picker
+        Date date= new Date();
+        content.add(new JLabel(date.toString())); // Consider using a date/time picker
 
         content.add(new JLabel("Location of Inspection"));
-        content.add(new JTextField(20));
+        JTextField location = new JTextField();
+        content.add(location);
 
         content.add(new JLabel("Geo Coordinates of Inspection (optional)"));
-        content.add(new JTextField(20));
+        JTextField coordinates = new JTextField();
+        content.add(coordinates);
 
         content.add(new JLabel("Service Meter Hours (Odometer reading)"));
-        content.add(new JTextField(20));
+        JFormattedTextField odometerReading = new JFormattedTextField(numberFormatter);
+        content.add(odometerReading);
 
-        content.add(new JLabel("Inspector Signature"));
-        content.add(new JTextField(20)); // Could be a signature capture component
+        content.add(new JLabel("Inspector Signature [TODO: SIGNATURE CAPTURE]"));
+        content.add(new JTextField(20)); //TODO: Could be a signature capture component
 
         content.add(new JLabel("Customer Name / Company name"));
-        content.add(new JTextField(20));
+        JTextField customerName = new JTextField();
+        content.add(customerName);
 
         content.add(new JLabel("CAT Customer ID"));
-        content.add(new JTextField(20));
+        JTextField customerID = new JTextField();
+        content.add(customerID);
 
         // TIRES
         content.add(new JLabel("<html><b>Tires</b></html>")); // Sub-header
         content.add(new JLabel("")); // Empty cell to fill space
 
         content.add(new JLabel("Tire Pressure for Left Front"));
-        content.add(new JTextField(20));
+        JFormattedTextField tirePressureLF = new JFormattedTextField(numberFormatter);
+        content.add(tirePressureLF);
 
         content.add(new JLabel("Tire Pressure for Right Front"));
-        content.add(new JTextField(20));
+        JFormattedTextField tirePressureRF = new JFormattedTextField(numberFormatter);
+        content.add(tirePressureRF);
 
         content.add(new JLabel("Tire Condition for Left Front"));
-        content.add(new JComboBox<>(new String[]{"Good", "Ok", "Needs Replacement"}));
+        JComboBox<String> tireConditionLF = new JComboBox<>(new String[]{"Good", "Ok", "Needs Replacement"});
+        content.add(tireConditionLF);
 
         content.add(new JLabel("Tire Condition for Right Front"));
-        content.add(new JComboBox<>(new String[]{"Good", "Ok", "Needs Replacement"}));
+        JComboBox<String> tireConditionRF = new JComboBox<>(new String[]{"Good", "Ok", "Needs Replacement"});
+        content.add(tireConditionRF);
 
         content.add(new JLabel("Tire Pressure for Left Rear"));
-        content.add(new JTextField(20));
+        JFormattedTextField tirePressureLR = new JFormattedTextField(numberFormatter);
+        content.add(tirePressureLR);
 
         content.add(new JLabel("Tire Pressure for Right Rear"));
-        content.add(new JTextField(20));
+        JFormattedTextField tirePressureRR = new JFormattedTextField(numberFormatter);
+        content.add(tirePressureRR);
 
         content.add(new JLabel("Tire Condition for Left Rear"));
-        content.add(new JComboBox<>(new String[]{"Good", "Ok", "Needs Replacement"}));
+        JComboBox<String> tireConditionLR = new JComboBox<>(new String[]{"Good", "Ok", "Needs Replacement"});
+        content.add(tireConditionLR);
 
         content.add(new JLabel("Tire Condition for Right Rear"));
-        content.add(new JComboBox<>(new String[]{"Good", "Ok", "Needs Replacement"}));
+        JComboBox<String> tireConditionRR = new JComboBox<>(new String[]{"Good", "Ok", "Needs Replacement"});
+        content.add(tireConditionRR);
 
         content.add(new JLabel("Overall Tire Summary"));
-        content.add(new JTextArea(5, 20));
+        JTextArea tireSummary = new JTextArea(5,200);
+        content.add(tireSummary);
 
         content.add(new JLabel("Attached images of each tire"));
-        content.add(new JButton("Attach Images"));
+        content.add(new JButton("Attach Images"));//TODO: Add Image Uploading
 
         // BATTERY
         content.add(new JLabel("<html><b>Battery</b></html>")); // Sub-header
         content.add(new JLabel("")); // Empty cell to fill space
 
         content.add(new JLabel("Battery Make"));
-        content.add(new JTextField(20));
+        JTextField batteryMake = new JTextField();
+        content.add(batteryMake);
 
         content.add(new JLabel("Battery Replacement Date"));
         content.add(new JTextField(20)); // Consider using a date picker
