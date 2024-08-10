@@ -1,3 +1,8 @@
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.annotations.Expose;
+
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -6,62 +11,73 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.text.NumberFormat;
 import java.util.Date;
 import java.util.Locale;
 
 public class myFrame extends JFrame implements ActionListener {
 
+    private String currentCategory;
+    @Expose private JsonObject imageCategories;
+
+
+
     //are variables as instance variables
 
-    private final myTextField truckSerialNumber;
-    private final myTextField truckModel;
-    private final myTextField inspectorName;
-    private final myFormattedTextField empID;
-    private final Date date;
-    private final myTextField currentLocation;
-    private final myTextField coordinates;
-    private final myFormattedTextField odometerReading;
-    private final myTextField customerName;
-    private final myTextField customerID;
-    private final myFormattedTextField tirePressureLF;
-    private final myFormattedTextField tirePressureRF;
-    private final myComboBox<String> tireConditionLF;
-    private final myComboBox<String> tireConditionRF;
-    private final myFormattedTextField tirePressureLR;
-    private final myFormattedTextField tirePressureRR;
-    private final myComboBox<String> tireConditionLR;
-    private final myComboBox<String> tireConditionRR;
-    private final myTextArea tireSummary;
-    private final myTextField batteryMake;
-    private final myTextField batteryReplacementDate;
-    private final myFormattedTextField batteryVoltage;
-    private final myComboBox<String> batteryWater;
-    private final myComboBox<String> batteryCondition;
-    private final myComboBox<String> batteryLeakRust;
-    private final myTextArea batterySummary;
-    private final myComboBox<String> exteriorDamage;
-    private final myComboBox<String> oilLeak;
-    private final myTextArea exteriorSummary;
-    private final myComboBox<String> brakeFluidLevel;
-    private final myComboBox<String> brakeFront;
-    private final myComboBox<String> brakeRear;
-    private final myComboBox<String> emergencyBrake;
-    private final myTextArea brakeSummary;
-    private final myComboBox<String> engineDamage;
-    private final myComboBox<String> engineOil;
-    private final myComboBox<String> engineOilColor;
-    private final myComboBox<String> brakeFluidCondition;
-    private final myComboBox<String> brakeFluidColor;
-    private final myComboBox<String> engineOilLeak;
-    private final myTextArea engineSummary;
-    private final myTextArea customerFeedback;
+   @Expose private  myTextField truckSerialNumber;
+   @Expose private  myTextField truckModel;
+   @Expose private  myTextField inspectorName;
+   @Expose private  myFormattedTextField empID;
+   @Expose private  Date date;
+   @Expose private  myTextField currentLocation;
+   @Expose private  myTextField coordinates;
+   @Expose private  myFormattedTextField odometerReading;
+   @Expose private  myTextField customerName;
+   @Expose private  myTextField customerID;
+   @Expose private  myFormattedTextField tirePressureLF;
+   @Expose private  myFormattedTextField tirePressureRF;
+   @Expose private  myComboBox<String> tireConditionLF;
+   @Expose private  myComboBox<String> tireConditionRF;
+   @Expose private  myFormattedTextField tirePressureLR;
+   @Expose private  myFormattedTextField tirePressureRR;
+   @Expose private  myComboBox<String> tireConditionLR;
+   @Expose private  myComboBox<String> tireConditionRR;
+   @Expose private  myTextArea tireSummary;
+   @Expose private  myTextField batteryMake;
+   @Expose private  myTextField batteryReplacementDate;
+   @Expose private  myFormattedTextField batteryVoltage;
+   @Expose private  myComboBox<String> batteryWater;
+   @Expose private  myComboBox<String> batteryCondition;
+   @Expose private  myComboBox<String> batteryLeakRust;
+   @Expose private  myTextArea batterySummary;
+   @Expose private  myComboBox<String> exteriorDamage;
+   @Expose private  myComboBox<String> oilLeak;
+   @Expose private  myTextArea exteriorSummary;
+   @Expose private  myComboBox<String> brakeFluidLevel;
+   @Expose private  myComboBox<String> brakeFront;
+   @Expose private  myComboBox<String> brakeRear;
+   @Expose private  myComboBox<String> emergencyBrake;
+   @Expose private  myTextArea brakeSummary;
+   @Expose private  myComboBox<String> engineDamage;
+   @Expose private  myComboBox<String> engineOil;
+   @Expose private  myComboBox<String> engineOilColor;
+   @Expose private  myComboBox<String> brakeFluidCondition;
+   @Expose private  myComboBox<String> brakeFluidColor;
+   @Expose private  myComboBox<String> engineOilLeak;
+   @Expose private  myTextArea engineSummary;
+   @Expose private  myTextArea customerFeedback;
 
 
 
     myFrame() {
+
+        imageCategories=new JsonObject();      //initialize object
+
         this.setTitle("CAT Inspection Tool");
         this.setResizable(false);
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -105,8 +121,8 @@ public class myFrame extends JFrame implements ActionListener {
 
         JPanel content = new JPanel();
         content.setBackground(Color.white);
-        content.setPreferredSize(new Dimension(1100,5000));
-        content.setBorder(new EmptyBorder(0, 10, 0, 10));
+        content.setPreferredSize(new Dimension(650,5000));
+        content.setBorder(new EmptyBorder(0, 15, 0, 15));
         content.setLayout(new GridLayout(0, 2, -10, 10));// 0 rows for dynamic adding
 
         //Form Elements
@@ -205,7 +221,9 @@ public class myFrame extends JFrame implements ActionListener {
         content.add(tireSummary);
 
         content.add(new JLabel("Attached images of each tire"));
-        content.add(new JButton("Attach Images"));//TODO: Add Image Uploading
+        JButton tiresButton= new JButton("Upload Tires");
+        tiresButton.addActionListener(this);
+        content.add(tiresButton);
 
         // BATTERY
         content.add(new JLabel("2.Battery", SwingConstants.CENTER) {{
@@ -242,7 +260,9 @@ public class myFrame extends JFrame implements ActionListener {
         content.add(batterySummary);
 
         content.add(new JLabel("Attached images"));
-        content.add(new JButton("Attach Images"));//TODO: attaching images
+        JButton batteryButton= new JButton("Upload Battery");
+        batteryButton.addActionListener(this);
+        content.add(batteryButton);
 
         // EXTERIOR
         content.add(new JLabel("3.Exterior", SwingConstants.CENTER) {{
@@ -263,7 +283,9 @@ public class myFrame extends JFrame implements ActionListener {
         content.add(exteriorSummary);
 
         content.add(new JLabel("Attached images"));
-        content.add(new JButton("Attach Images"));//TODO: Image attachment
+        JButton exteriorButton= new JButton("Upload Exterior");
+        exteriorButton.addActionListener(this);
+        content.add(exteriorButton);
 
         // BRAKES
         content.add(new JLabel("4.Brakes", SwingConstants.CENTER) {{
@@ -292,7 +314,9 @@ public class myFrame extends JFrame implements ActionListener {
         content.add(brakeSummary);
 
         content.add(new JLabel("Attached images"));
-        content.add(new JButton("Attach Images"));//TODO: Image attachment
+        JButton brakeButton= new JButton("Upload Brake");
+        brakeButton.addActionListener(this);
+        content.add(brakeButton);
 
         // ENGINE
         content.add(new JLabel("5.Engine", SwingConstants.CENTER) {{
@@ -329,7 +353,9 @@ public class myFrame extends JFrame implements ActionListener {
         content.add(engineSummary);
 
         content.add(new JLabel("Attached images"));
-        content.add(new JButton("Attach Images"));//TODO: attach images
+        JButton engineButton= new JButton("Upload Engine");
+        engineButton.addActionListener(this);
+        content.add(engineButton);
 
         // CUSTOMER FEEDBACK
         content.add(new JLabel("Customer Feedback", SwingConstants.CENTER) {{
@@ -342,8 +368,9 @@ public class myFrame extends JFrame implements ActionListener {
         content.add(customerFeedback);
 
         content.add(new JLabel("Images related to issues discussed with customer"));
-        content.add(new JButton("Attach Images"));//TODO: attach images
-
+        JButton customerButton= new JButton("Upload Customer complaint");
+        customerButton.addActionListener(this);
+        content.add(customerButton);
         //Scroll Pane
         JScrollPane formscrl = new JScrollPane(content);
 
@@ -384,19 +411,142 @@ public class myFrame extends JFrame implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         String command = e.getActionCommand();
-
         switch (command) {
             case "Submit":
-                // TODO:Implement submit logic here
-                break;
+                // TODO:Implement submit logic here.
+                //  Show a dialog box to confirm submission and then convert everything to a JSON file
+                return;
             case "Reset":
-                // TODO:Implement reset logic here
-                break;
-            default:
+                resetTextFields();
+                resetFormattedTextFields();
+                resetComboBoxes();
+                resetTextAreas();
+                return;
+        }
+
+        JButton sourceButton = (JButton) e.getSource();
+        currentCategory = sourceButton.getText().replace("Upload ", ""); // Get category from button text
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setMultiSelectionEnabled(true);
+        fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+
+        // Set the initial directory to the user's Downloads folder
+        Path downloadsPath = Paths.get(System.getProperty("user.home"), "Downloads");
+        fileChooser.setCurrentDirectory(downloadsPath.toFile());
+        int result = fileChooser.showOpenDialog(this);
+
+        if (result == JFileChooser.APPROVE_OPTION) {
+            File[] files = fileChooser.getSelectedFiles();
+            processImages(files);
+        }
+
+    }
+
+    //Image processing methods
+
+    private void processImages(File[] files) {
+        for (File file : files) {
+            addImageToCategory(file);
         }
     }
 
+    private void addImageToCategory(File file) {
+        try {
+            BufferedImage image = ImageIO.read(file);
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            ImageIO.write(image, "png", baos);
+            byte[] imageData = baos.toByteArray();
+            String base64Image = java.util.Base64.getEncoder().encodeToString(imageData);
 
+            System.out.println(file.getName());
+
+            JsonObject imageObject = new JsonObject();
+            imageObject.addProperty("fileName", file.getName());
+            imageObject.addProperty("base64Data", base64Image);
+
+            // Create or get the category JSON array
+            JsonArray categoryArray = imageCategories.has(currentCategory)
+                    ? imageCategories.getAsJsonArray(currentCategory)
+                    : new JsonArray();
+
+            categoryArray.add(imageObject);
+
+            // Update the category in the JSON object
+            imageCategories.add(currentCategory, categoryArray);
+
+
+
+            //System.out.println(getJsonString());
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public String getJsonString() {
+        Gson gson = new Gson();
+        return gson.toJson(imageCategories);
+    }
+
+
+// Helper methods
+
+    private void resetTextFields() {
+        truckSerialNumber.setText("");
+        truckModel.setText("");
+        inspectorName.setText("");
+        currentLocation.setText("");
+        coordinates.setText("");
+        customerName.setText("");
+        customerID.setText("");
+        batteryMake.setText("");
+        batteryReplacementDate.setText("");
+    }
+
+    private void resetFormattedTextFields() {
+        empID.setValue(null);
+        odometerReading.setValue(null);
+        tirePressureLF.setValue(null);
+        tirePressureRF.setValue(null);
+        tirePressureLR.setValue(null);
+        tirePressureRR.setValue(null);
+        batteryVoltage.setValue(null);
+    }
+
+    private void resetComboBoxes() {
+        resetComboBox(tireConditionLF);
+        resetComboBox(tireConditionRF);
+        resetComboBox(tireConditionLR);
+        resetComboBox(tireConditionRR);
+        resetComboBox(batteryWater);
+        resetComboBox(batteryCondition);
+        resetComboBox(batteryLeakRust);
+        resetComboBox(exteriorDamage);
+        resetComboBox(oilLeak);
+        resetComboBox(brakeFluidLevel);
+        resetComboBox(brakeFront);
+        resetComboBox(brakeRear);
+        resetComboBox(emergencyBrake);
+        resetComboBox(engineDamage);
+        resetComboBox(engineOil);
+        resetComboBox(engineOilColor);
+        resetComboBox(brakeFluidCondition);
+        resetComboBox(brakeFluidColor);
+        resetComboBox(engineOilLeak);
+    }
+
+    private void resetComboBox(myComboBox<String> comboBox) {
+        comboBox.setSelectedIndex(0);
+    }
+
+    private void resetTextAreas() {
+        tireSummary.setText("");
+        batterySummary.setText("");
+        exteriorSummary.setText("");
+        brakeSummary.setText("");
+        engineSummary.setText("");
+        customerFeedback.setText("");
+    }
 
 
     //GETTERS FOR JSON CONVERSION
