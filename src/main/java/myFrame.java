@@ -16,48 +16,49 @@ public class myFrame extends JFrame implements ActionListener {
 
     //are variables as instance variables
 
-        myTextField truckSerialNumber;
-        myTextField truckModel;
-        myTextField inspectorName;
-        myFormattedTextField empID;
-        Date date;
-        myTextField location;
-        myTextField coordinates;
-        myFormattedTextField odometerReading;
-        myTextField customerName;
-        myTextField customerID;
-        myFormattedTextField tirePressureLF;
-        myFormattedTextField tirePressureRF;
-        myComboBox<String> tireConditionLF;
-        myComboBox<String> tireConditionRF;
-        myFormattedTextField tirePressureLR;
-        myFormattedTextField tirePressureRR;
-        myComboBox<String> tireConditionLR;
-        myComboBox<String> tireConditionRR;
-        myTextArea tireSummary;
-        myTextField batteryMake;
-        myTextField batteryReplacementDate;
-        myFormattedTextField batteryVoltage;
-        myComboBox<String> batteryWater;
-        myComboBox<String> batteryCondition;
-        myComboBox<String> batteryLeakRust;
-        myTextArea batterySummary;
-        myComboBox<String> exteriorDamage;
-        myComboBox<String> oilLeak;
-        myTextArea exteriorSummary;
-        myComboBox<String> brakeFluidLevel;
-        myComboBox<String> brakeFront;
-        myComboBox<String> brakeRear;
-        myComboBox<String> emergencyBrake;
-        myTextArea brakeSummary;
-        myComboBox<String> engineDamage;
-        myComboBox<String> engineOil;
-        myComboBox<String> engineOilColor;
-        myComboBox<String> brakeFluidCondition;
-        myComboBox<String> brakeFluidColor;
-        myComboBox<String> engineOilLeak;
-        myTextArea engineSummary;
-        myTextArea customerFeedback;
+    private final myTextField truckSerialNumber;
+    private final myTextField truckModel;
+    private final myTextField inspectorName;
+    private final myFormattedTextField empID;
+    private final Date date;
+    private final myTextField currentLocation;
+    private final myTextField coordinates;
+    private final myFormattedTextField odometerReading;
+    private final myTextField customerName;
+    private final myTextField customerID;
+    private final myFormattedTextField tirePressureLF;
+    private final myFormattedTextField tirePressureRF;
+    private final myComboBox<String> tireConditionLF;
+    private final myComboBox<String> tireConditionRF;
+    private final myFormattedTextField tirePressureLR;
+    private final myFormattedTextField tirePressureRR;
+    private final myComboBox<String> tireConditionLR;
+    private final myComboBox<String> tireConditionRR;
+    private final myTextArea tireSummary;
+    private final myTextField batteryMake;
+    private final myTextField batteryReplacementDate;
+    private final myFormattedTextField batteryVoltage;
+    private final myComboBox<String> batteryWater;
+    private final myComboBox<String> batteryCondition;
+    private final myComboBox<String> batteryLeakRust;
+    private final myTextArea batterySummary;
+    private final myComboBox<String> exteriorDamage;
+    private final myComboBox<String> oilLeak;
+    private final myTextArea exteriorSummary;
+    private final myComboBox<String> brakeFluidLevel;
+    private final myComboBox<String> brakeFront;
+    private final myComboBox<String> brakeRear;
+    private final myComboBox<String> emergencyBrake;
+    private final myTextArea brakeSummary;
+    private final myComboBox<String> engineDamage;
+    private final myComboBox<String> engineOil;
+    private final myComboBox<String> engineOilColor;
+    private final myComboBox<String> brakeFluidCondition;
+    private final myComboBox<String> brakeFluidColor;
+    private final myComboBox<String> engineOilLeak;
+    private final myTextArea engineSummary;
+    private final myTextArea customerFeedback;
+
 
 
     myFrame() {
@@ -142,8 +143,8 @@ public class myFrame extends JFrame implements ActionListener {
         content.add(new JLabel(date.toString())); // Consider using a date/time picker
 
         content.add(new JLabel("Location of Inspection"));
-        location = new myTextField();
-        content.add(location);
+        currentLocation = new myTextField();
+        content.add(currentLocation);
 
         content.add(new JLabel("Geo Coordinates of Inspection (optional)"));
         coordinates = new myTextField();
@@ -152,9 +153,6 @@ public class myFrame extends JFrame implements ActionListener {
         content.add(new JLabel("Service Meter Hours (Odometer reading)"));
         odometerReading = new myFormattedTextField(numberFormatter);
         content.add(odometerReading);
-
-        content.add(new JLabel("Inspector Signature [TODO: SIGNATURE CAPTURE]"));
-        content.add(new myTextField(20)); //TODO: Could be a signature capture component
 
         content.add(new JLabel("Customer Name / Company name"));
         customerName = new myTextField();
@@ -373,7 +371,7 @@ public class myFrame extends JFrame implements ActionListener {
         resetButton.addActionListener(this);
         footer.add(resetButton);
 
-
+        //System.out.println(tireConditionLF.getSelectedItem());
         // Combine the panels
         this.setLayout(new BorderLayout());
         this.add(header, BorderLayout.NORTH);
@@ -397,4 +395,177 @@ public class myFrame extends JFrame implements ActionListener {
             default:
         }
     }
+
+
+
+
+    //GETTERS FOR JSON CONVERSION
+    public myTextField getTruckSerialNumber() {
+        return truckSerialNumber;
+    }
+
+    public myTextField getTruckModel() {
+        return truckModel;
+    }
+
+    public myTextField getInspectorName() {
+        return inspectorName;
+    }
+
+    public myFormattedTextField getEmpID() {
+        return empID;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public myTextField getCurrentLocation() {
+        return currentLocation;
+    }
+
+    public myTextField getCoordinates() {
+        return coordinates;
+    }
+
+    public myFormattedTextField getOdometerReading() {
+        return odometerReading;
+    }
+
+    public myTextField getCustomerName() {
+        return customerName;
+    }
+
+    public myTextField getCustomerID() {
+        return customerID;
+    }
+
+    public myFormattedTextField getTirePressureLF() {
+        return tirePressureLF;
+    }
+
+    public myFormattedTextField getTirePressureRF() {
+        return tirePressureRF;
+    }
+
+    public myComboBox<String> getTireConditionLF() {
+        return tireConditionLF;
+    }
+
+    public myComboBox<String> getTireConditionRF() {
+        return tireConditionRF;
+    }
+
+    public myFormattedTextField getTirePressureLR() {
+        return tirePressureLR;
+    }
+
+    public myFormattedTextField getTirePressureRR() {
+        return tirePressureRR;
+    }
+
+    public myComboBox<String> getTireConditionLR() {
+        return tireConditionLR;
+    }
+
+    public myComboBox<String> getTireConditionRR() {
+        return tireConditionRR;
+    }
+
+    public myTextArea getTireSummary() {
+        return tireSummary;
+    }
+
+    public myTextField getBatteryMake() {
+        return batteryMake;
+    }
+
+    public myTextField getBatteryReplacementDate() {
+        return batteryReplacementDate;
+    }
+
+    public myFormattedTextField getBatteryVoltage() {
+        return batteryVoltage;
+    }
+
+    public myComboBox<String> getBatteryWater() {
+        return batteryWater;
+    }
+
+    public myComboBox<String> getBatteryCondition() {
+        return batteryCondition;
+    }
+
+    public myComboBox<String> getBatteryLeakRust() {
+        return batteryLeakRust;
+    }
+
+    public myTextArea getBatterySummary() {
+        return batterySummary;
+    }
+
+    public myComboBox<String> getExteriorDamage() {
+        return exteriorDamage;
+    }
+
+    public myComboBox<String> getOilLeak() {
+        return oilLeak;
+    }
+
+    public myTextArea getExteriorSummary() {
+        return exteriorSummary;
+    }
+
+    public myComboBox<String> getBrakeFluidLevel() {
+        return brakeFluidLevel;
+    }
+
+    public myComboBox<String> getBrakeFront() {
+        return brakeFront;
+    }
+
+    public myComboBox<String> getBrakeRear() {
+        return brakeRear;
+    }
+
+    public myComboBox<String> getEmergencyBrake() {
+        return emergencyBrake;
+    }
+
+    public myTextArea getBrakeSummary() {
+        return brakeSummary;
+    }
+
+    public myComboBox<String> getEngineDamage() {
+        return engineDamage;
+    }
+
+    public myComboBox<String> getEngineOil() {
+        return engineOil;
+    }
+
+    public myComboBox<String> getEngineOilColor() {
+        return engineOilColor;
+    }
+
+    public myComboBox<String> getBrakeFluidCondition() {
+        return brakeFluidCondition;
+    }
+
+    public myComboBox<String> getBrakeFluidColor() {
+        return brakeFluidColor;
+    }
+
+    public myComboBox<String> getEngineOilLeak() {
+        return engineOilLeak;
+    }
+
+    public myTextArea getEngineSummary() {
+        return engineSummary;
+    }
+
+    public myTextArea getCustomerFeedback() {
+        return customerFeedback;
+    }
+
 }
