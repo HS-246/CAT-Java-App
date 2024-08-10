@@ -3,37 +3,37 @@ import javax.swing.plaf.basic.BasicScrollBarUI;
 import java.awt.*;
 
 public class customScroll {
-    public static void main(String[] args) {
-        // Create a JFrame
-        JFrame frame = new JFrame("Custom ScrollBar Example");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(400, 300);
-
-        // Create a JTextArea (or any component)
-        JTextArea textArea = new JTextArea(20, 30);
-        for (int i = 1; i <= 50; i++) {
-            textArea.append("Line " + i + "\n");
-        }
-
-        // Wrap the JTextArea in a JScrollPane
-        JScrollPane scrollPane = new JScrollPane(textArea);
-
-        // Create a custom scroll bar
-        JScrollBar verticalScrollBar = scrollPane.getVerticalScrollBar();
-        verticalScrollBar.setUI(new CustomScrollBarUI());
-
-        // Add the JScrollPane to the JFrame
-        frame.add(scrollPane, BorderLayout.CENTER);
-
-        // Set the frame to be visible
-        frame.setVisible(true);
-    }
+//    public static void main(String[] args) {
+//        // Create a JFrame
+//        JFrame frame = new JFrame("Custom ScrollBar Example");
+//        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//        frame.setSize(400, 300);
+//
+//        // Create a JTextArea (or any component)
+//        JTextArea textArea = new JTextArea(20, 30);
+//        for (int i = 1; i <= 50; i++) {
+//            textArea.append("Line " + i + "\n");
+//        }
+//
+//        // Wrap the JTextArea in a JScrollPane
+//        JScrollPane scrollPane = new JScrollPane(textArea);
+//
+//        // Create a custom scroll bar
+//        JScrollBar verticalScrollBar = scrollPane.getVerticalScrollBar();
+//        verticalScrollBar.setUI(new CustomScrollBarUI());
+//
+//        // Add the JScrollPane to the JFrame
+//        frame.add(scrollPane, BorderLayout.CENTER);
+//
+//        // Set the frame to be visible
+//        frame.setVisible(true);
+//    }
 
     // Custom ScrollBarUI class
     static class CustomScrollBarUI extends BasicScrollBarUI {
         @Override
         protected void configureScrollBarColors() {
-            this.thumbColor = new Color(100, 100, 200); // Color of the scroll thumb
+            this.thumbColor = new Color(255, 196, 0); // Color of the scroll thumb
         }
 
         @Override
@@ -56,8 +56,8 @@ public class customScroll {
 
         @Override
         protected void paintTrack(Graphics g, JComponent c, Rectangle trackBounds) {
-            g.setColor(new Color(230, 230, 250)); // Color of the track
-            g.fillRect(trackBounds.x, trackBounds.y, trackBounds.width, trackBounds.height);
+            g.setColor(new Color(0,0,0,(float)0.6)); // Color of the track
+            g.fillRoundRect(trackBounds.x, trackBounds.y, trackBounds.width, trackBounds.height,10,10);
         }
 
         @Override
