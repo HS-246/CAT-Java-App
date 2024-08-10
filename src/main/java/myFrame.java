@@ -1,5 +1,6 @@
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import javax.swing.text.NumberFormatter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -18,7 +19,7 @@ public class myFrame extends JFrame implements ActionListener {
         this.setTitle("CAT Inspection Tool");
         this.setResizable(false);
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        this.setSize(1000, 600);
+        this.setSize(1100, 600);
 
 
 
@@ -37,7 +38,7 @@ public class myFrame extends JFrame implements ActionListener {
 
         JPanel header = new JPanel();
         header.setBackground(Color.lightGray);
-        header.setPreferredSize(new Dimension(1000,150));
+        header.setPreferredSize(new Dimension(950,150));
         header.setLayout(new BorderLayout());
 
         JLabel headerLabel = new JLabel();
@@ -53,14 +54,17 @@ public class myFrame extends JFrame implements ActionListener {
         // Create a NumberFormat instance for integers
         NumberFormat numberFormat = NumberFormat.getIntegerInstance(Locale.getDefault());
         numberFormat.setGroupingUsed(false);
+
         NumberFormatter numberFormatter = new NumberFormatter(numberFormat);
         numberFormatter.setMinimum(0);
-        numberFormatter.setAllowsInvalid(false); // Prevents invalid input
+        numberFormatter.setAllowsInvalid(true);
+        numberFormatter.setCommitsOnValidEdit(true);// Prevents invalid input
 
 
         JPanel content = new JPanel();
         content.setBackground(Color.pink);
-        content.setLayout(new GridLayout(0,2,0,10));// 0 rows for dynamic adding
+        content.setBorder(new EmptyBorder(5, 10, 5, 10));
+        content.setLayout(new GridLayout(0,2,-10,10));// 0 rows for dynamic adding
 
         //Form Elements
 
@@ -153,7 +157,8 @@ public class myFrame extends JFrame implements ActionListener {
         content.add(tireConditionRR);
 
         content.add(new JLabel("Overall Tire Summary"));
-        JTextArea tireSummary = new JTextArea(5,200);
+        JTextArea tireSummary = new JTextArea(3,20);
+        tireSummary.setLineWrap(true);
         content.add(tireSummary);
 
         content.add(new JLabel("Attached images of each tire"));
@@ -167,110 +172,133 @@ public class myFrame extends JFrame implements ActionListener {
         JTextField batteryMake = new JTextField();
         content.add(batteryMake);
 
-        content.add(new JLabel("Battery Replacement Date"));
-        content.add(new JTextField(20)); // Consider using a date picker
+        content.add(new JLabel("Battery Replacement Date (DD/MM/YYYY)"));
+        JTextField batteryReplacementDate = new JTextField(10);
+        content.add(batteryReplacementDate);
 
         content.add(new JLabel("Battery Voltage"));
-        content.add(new JTextField(20));
+        JFormattedTextField batteryVoltage = new JFormattedTextField(numberFormatter);
+        content.add(batteryVoltage);
 
         content.add(new JLabel("Battery Water Level"));
-        content.add(new JComboBox<>(new String[]{"Good", "Ok", "Low"}));
+        JComboBox <String> batteryWater= new JComboBox<>(new String[]{"Good", "Ok", "Low"});
+        content.add(batteryWater);
 
         content.add(new JLabel("Condition of Battery (Any damage)"));
-        content.add(new JCheckBox());
+        JComboBox <String> batteryCondition= new JComboBox<>(new String[]{"Yes","No"});
+        content.add(batteryCondition);
 
         content.add(new JLabel("Any Leak / Rust in Battery"));
-        content.add(new JCheckBox());
+        JComboBox <String> batteryLeakRust= new JComboBox<>(new String[]{"Yes","No"});
+        content.add(batteryLeakRust);
 
         content.add(new JLabel("Battery Overall Summary"));
-        content.add(new JTextArea(5, 20));
+        JTextArea batterySummary= new JTextArea(3,20);
+        content.add(batterySummary);
 
         content.add(new JLabel("Attached images"));
-        content.add(new JButton("Attach Images"));
+        content.add(new JButton("Attach Images"));//TODO: Image attachment
 
         // EXTERIOR
         content.add(new JLabel("<html><b>Exterior</b></html>")); // Sub-header
         content.add(new JLabel("")); // Empty cell to fill space
 
         content.add(new JLabel("Rust, Dent or Damage to Exterior"));
-        content.add(new JCheckBox());
+        JComboBox <String> exteriorDamage= new JComboBox<>(new String[]{"Yes,Explain in notes","No"});
+        content.add(exteriorDamage);
 
         content.add(new JLabel("Oil Leak in Suspension"));
-        content.add(new JCheckBox());
+        JComboBox <String> oilLeak= new JComboBox<>(new String[]{"Yes","No"});
+        content.add(oilLeak);
 
         content.add(new JLabel("Overall Summary"));
-        content.add(new JTextArea(5, 20));
+        JTextArea exteriorSummary= new JTextArea(3,20);
+        content.add(exteriorSummary);
 
         content.add(new JLabel("Attached images"));
-        content.add(new JButton("Attach Images"));
+        content.add(new JButton("Attach Images"));//TODO: attaching images
 
         // BRAKES
         content.add(new JLabel("<html><b>Brakes</b></html>")); // Sub-header
         content.add(new JLabel("")); // Empty cell to fill space
 
         content.add(new JLabel("Brake Fluid Level"));
-        content.add(new JComboBox<>(new String[]{"Good", "Ok", "Low"}));
+        JComboBox <String> brakeFluidLevel= new JComboBox<>(new String[]{"Good", "Ok", "Low"});
+        content.add(brakeFluidLevel);
 
         content.add(new JLabel("Brake Condition for Front"));
-        content.add(new JComboBox<>(new String[]{"Good", "Ok", "Needs Replacement"}));
+        JComboBox <String> brakeFront= new JComboBox<>(new String[]{"Good", "Ok", "Needs Replacement"});
+        content.add(brakeFront);
 
         content.add(new JLabel("Brake Condition for Rear"));
-        content.add(new JComboBox<>(new String[]{"Good", "Ok", "Needs Replacement"}));
+        JComboBox <String> brakeRear= new JComboBox<>(new String[]{"Good", "Ok", "Needs Replacement"});
+        content.add(brakeRear);
 
         content.add(new JLabel("Emergency Brake"));
-        content.add(new JComboBox<>(new String[]{"Good", "Ok", "Low"}));
+        JComboBox <String> emergencyBrake= new JComboBox<>(new String[]{"Good", "Ok", "Low"});
+        content.add(emergencyBrake);
 
         content.add(new JLabel("Brake Overall Summary"));
-        content.add(new JTextArea(5, 20));
+        JTextArea brakeSummary= new JTextArea(3,20);
+        content.add(brakeSummary);
 
         content.add(new JLabel("Attached images"));
-        content.add(new JButton("Attach Images"));
+        content.add(new JButton("Attach Images"));//TODO: attach images
 
         // ENGINE
         content.add(new JLabel("<html><b>Engine</b></html>")); // Sub-header
         content.add(new JLabel("")); // Empty cell to fill space
 
         content.add(new JLabel("Rust, Dents or Damage in Engine"));
-        content.add(new JCheckBox());
+        JComboBox <String> engineDamage= new JComboBox<>(new String[]{"Yes,Explain in notes","No"});
+        content.add(engineDamage);
 
         content.add(new JLabel("Engine Oil Condition"));
-        content.add(new JComboBox<>(new String[]{"Good", "Bad"}));
+        JComboBox <String> engineOil= new JComboBox<>(new String[]{"Good","Bad"});
+        content.add(engineOil);
 
         content.add(new JLabel("Engine Oil Color"));
-        content.add(new JComboBox<>(new String[]{"Clean", "Brown", "Black"}));
+        JComboBox <String> engineOilColor= new JComboBox<>(new String[]{"Clean", "Brown", "Black"});
+        content.add(engineOilColor);
 
         content.add(new JLabel("Brake Fluid Condition"));
-        content.add(new JComboBox<>(new String[]{"Good", "Bad"}));
+        JComboBox <String> brakeFluidCondition= new JComboBox<>(new String[]{"Good","Bad"});
+        content.add(brakeFluidCondition);
 
         content.add(new JLabel("Brake Fluid Color"));
-        content.add(new JComboBox<>(new String[]{"Clean", "Brown", "Black"}));
+        JComboBox <String> brakeFluidColor= new JComboBox<>(new String[]{"Clean", "Brown", "Black"});
+        content.add(brakeFluidColor);
 
         content.add(new JLabel("Any Oil Leak in Engine"));
-        content.add(new JCheckBox());
+        JComboBox <String> engineOilLeak= new JComboBox<>(new String[]{"Yes","No"});
+        content.add(engineOilLeak);
 
         content.add(new JLabel("Overall Summary"));
-        content.add(new JTextArea(5, 20));
+        JTextArea engineSummary= new JTextArea(3,20);
+        content.add(engineSummary);
 
         content.add(new JLabel("Attached images"));
-        content.add(new JButton("Attach Images"));
+        content.add(new JButton("Attach Images"));//TODO: attach images
 
         // Voice of Customer
         content.add(new JLabel("<html><b>Voice of Customer</b></html>")); // Sub-header
         content.add(new JLabel("")); // Empty cell to fill space
 
         content.add(new JLabel("Any feedback from Customer"));
-        content.add(new JTextArea(5, 20));
+        JTextArea customerFeedback= new JTextArea(3,20);
+        content.add(customerFeedback);
 
         content.add(new JLabel("Images related to issues discussed with customer"));
-        content.add(new JButton("Attach Images"));
+        content.add(new JButton("Attach Images"));//TODO: attach images
 
         content.add(new JLabel(""));
-        content.add(new JButton("Submit"));
+        content.add(new JButton("Submit"));//TODO: submit logic
 
 
         JScrollPane formscrl = new JScrollPane(content);
         formscrl.createVerticalScrollBar();
         formscrl.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        formscrl.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 
 
         this.add(header, BorderLayout.NORTH);
