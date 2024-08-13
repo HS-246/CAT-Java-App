@@ -1,4 +1,5 @@
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.annotations.Expose;
@@ -25,7 +26,7 @@ public class myFrame extends JFrame implements ActionListener {
     private String currentCategory;
     @Expose private JsonObject imageCategories;
 
-
+    private final Gson gson;
 
     //are variables as instance variables
 
@@ -394,6 +395,11 @@ public class myFrame extends JFrame implements ActionListener {
         submitButton.addActionListener(this);
         footer.add(submitButton);
 
+        gson = new GsonBuilder()
+                .excludeFieldsWithoutExposeAnnotation()
+                .setPrettyPrinting()
+                .create();
+
         JButton resetButton = new JButton("Reset");
         resetButton.addActionListener(this);
         footer.add(resetButton);
@@ -408,13 +414,18 @@ public class myFrame extends JFrame implements ActionListener {
         this.setVisible(true);
     }
 
+    public void saveToJsonString() {
+        JsonObject jsonObject = extractValuesToJson();
+        String jsonString = gson.toJson(jsonObject);
+        System.out.println(jsonString);
+    }
+
     @Override
     public void actionPerformed(ActionEvent e) {
         String command = e.getActionCommand();
         switch (command) {
             case "Submit":
-                // TODO:Implement submit logic here.
-                //  Show a dialog box to confirm submission and then convert everything to a JSON file
+                saveToJsonString();
                 return;
             case "Reset":
                 resetTextFields();
@@ -452,39 +463,30 @@ public class myFrame extends JFrame implements ActionListener {
 
     private void addImageToCategory(File file) {
         try {
-            BufferedImage image = ImageIO.read(file);
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            ImageIO.write(image, "png", baos);
-            byte[] imageData = baos.toByteArray();
-            String base64Image = java.util.Base64.getEncoder().encodeToString(imageData);
-
-            System.out.println(file.getName());
-
+            // Create a JSON object to hold image information
             JsonObject imageObject = new JsonObject();
             imageObject.addProperty("fileName", file.getName());
-            imageObject.addProperty("base64Data", base64Image);
+            imageObject.addProperty("filePath", file.getAbsolutePath()); // Store the file path
 
             // Create or get the category JSON array
             JsonArray categoryArray = imageCategories.has(currentCategory)
                     ? imageCategories.getAsJsonArray(currentCategory)
                     : new JsonArray();
 
+            // Add the image information to the category array
             categoryArray.add(imageObject);
 
             // Update the category in the JSON object
             imageCategories.add(currentCategory, categoryArray);
 
-
-
-            //System.out.println(getJsonString());
-
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
+
     public String getJsonString() {
-        Gson gson = new Gson();
+        //Gson gson = new Gson();
         return gson.toJson(imageCategories);
     }
 
@@ -548,174 +550,235 @@ public class myFrame extends JFrame implements ActionListener {
         customerFeedback.setText("");
     }
 
+    private JsonObject extractValuesToJson() {
+        JsonObject jsonObject = new JsonObject();
 
-    //GETTERS FOR JSON CONVERSION
-    public myTextField getTruckSerialNumber() {
-        return truckSerialNumber;
+        jsonObject.addProperty("truckSerialNumber", truckSerialNumber.getText());
+        jsonObject.addProperty("truckModel", truckModel.getText());
+        jsonObject.addProperty("inspectorName", inspectorName.getText());
+        jsonObject.addProperty("empID", empID.getText()); // Ensure you extract the value properly for formatted fields
+        jsonObject.addProperty("date", date.toString());
+        jsonObject.addProperty("currentLocation", currentLocation.getText());
+        jsonObject.addProperty("coordinates", coordinates.getText());
+        jsonObject.addProperty("odometerReading", odometerReading.getText());
+        jsonObject.addProperty("customerName", customerName.getText());
+        jsonObject.addProperty("customerID", customerID.getText());
+
+        // Similarly, add properties for all other fields:
+        jsonObject.addProperty("tirePressureLF", tirePressureLF.getText());
+        jsonObject.addProperty("tirePressureRF", tirePressureRF.getText());
+        jsonObject.addProperty("tireConditionLF", tireConditionLF.getSelectedItem().toString());
+        jsonObject.addProperty("tireConditionRF", tireConditionRF.getSelectedItem().toString());
+        jsonObject.addProperty("tirePressureLR", tirePressureLR.getText());
+        jsonObject.addProperty("tirePressureRR", tirePressureRR.getText());
+        jsonObject.addProperty("tireConditionLR", tireConditionLR.getSelectedItem().toString());
+        jsonObject.addProperty("tireConditionRR", tireConditionRR.getSelectedItem().toString());
+        jsonObject.addProperty("tireSummary", tireSummary.getText());
+
+        // Repeat for other fields: batteryMake, batteryReplacementDate, batteryVoltage, etc.
+        jsonObject.addProperty("batteryMake", batteryMake.getText());
+        jsonObject.addProperty("batteryReplacementDate", batteryReplacementDate.getText());
+        jsonObject.addProperty("batteryVoltage", batteryVoltage.getText());
+        jsonObject.addProperty("batteryWater", batteryWater.getSelectedItem().toString());
+        jsonObject.addProperty("batteryCondition", batteryCondition.getSelectedItem().toString());
+        jsonObject.addProperty("batteryLeakRust", batteryLeakRust.getSelectedItem().toString());
+        jsonObject.addProperty("batterySummary", batterySummary.getText());
+
+        jsonObject.addProperty("exteriorDamage", exteriorDamage.getSelectedItem().toString());
+        jsonObject.addProperty("oilLeak", oilLeak.getSelectedItem().toString());
+        jsonObject.addProperty("exteriorSummary", exteriorSummary.getText());
+
+        jsonObject.addProperty("brakeFluidLevel", brakeFluidLevel.getSelectedItem().toString());
+        jsonObject.addProperty("brakeFront", brakeFront.getSelectedItem().toString());
+        jsonObject.addProperty("brakeRear", brakeRear.getSelectedItem().toString());
+        jsonObject.addProperty("emergencyBrake", emergencyBrake.getSelectedItem().toString());
+        jsonObject.addProperty("brakeSummary", brakeSummary.getText());
+
+        jsonObject.addProperty("engineDamage", engineDamage.getSelectedItem().toString());
+        jsonObject.addProperty("engineOil", engineOil.getSelectedItem().toString());
+        jsonObject.addProperty("engineOilColor", engineOilColor.getSelectedItem().toString());
+        jsonObject.addProperty("brakeFluidCondition", brakeFluidCondition.getSelectedItem().toString());
+        jsonObject.addProperty("brakeFluidColor", brakeFluidColor.getSelectedItem().toString());
+        jsonObject.addProperty("engineOilLeak", engineOilLeak.getSelectedItem().toString());
+        jsonObject.addProperty("engineSummary", engineSummary.getText());
+
+        jsonObject.addProperty("customerFeedback", customerFeedback.getText());
+
+        jsonObject.add("imageCategories",imageCategories);
+
+        return jsonObject;
     }
 
-    public myTextField getTruckModel() {
-        return truckModel;
-    }
 
-    public myTextField getInspectorName() {
-        return inspectorName;
-    }
 
-    public myFormattedTextField getEmpID() {
-        return empID;
-    }
 
-    public Date getDate() {
-        return date;
-    }
-
-    public myTextField getCurrentLocation() {
-        return currentLocation;
-    }
-
-    public myTextField getCoordinates() {
-        return coordinates;
-    }
-
-    public myFormattedTextField getOdometerReading() {
-        return odometerReading;
-    }
-
-    public myTextField getCustomerName() {
-        return customerName;
-    }
-
-    public myTextField getCustomerID() {
-        return customerID;
-    }
-
-    public myFormattedTextField getTirePressureLF() {
-        return tirePressureLF;
-    }
-
-    public myFormattedTextField getTirePressureRF() {
-        return tirePressureRF;
-    }
-
-    public myComboBox<String> getTireConditionLF() {
-        return tireConditionLF;
-    }
-
-    public myComboBox<String> getTireConditionRF() {
-        return tireConditionRF;
-    }
-
-    public myFormattedTextField getTirePressureLR() {
-        return tirePressureLR;
-    }
-
-    public myFormattedTextField getTirePressureRR() {
-        return tirePressureRR;
-    }
-
-    public myComboBox<String> getTireConditionLR() {
-        return tireConditionLR;
-    }
-
-    public myComboBox<String> getTireConditionRR() {
-        return tireConditionRR;
-    }
-
-    public myTextArea getTireSummary() {
-        return tireSummary;
-    }
-
-    public myTextField getBatteryMake() {
-        return batteryMake;
-    }
-
-    public myTextField getBatteryReplacementDate() {
-        return batteryReplacementDate;
-    }
-
-    public myFormattedTextField getBatteryVoltage() {
-        return batteryVoltage;
-    }
-
-    public myComboBox<String> getBatteryWater() {
-        return batteryWater;
-    }
-
-    public myComboBox<String> getBatteryCondition() {
-        return batteryCondition;
-    }
-
-    public myComboBox<String> getBatteryLeakRust() {
-        return batteryLeakRust;
-    }
-
-    public myTextArea getBatterySummary() {
-        return batterySummary;
-    }
-
-    public myComboBox<String> getExteriorDamage() {
-        return exteriorDamage;
-    }
-
-    public myComboBox<String> getOilLeak() {
-        return oilLeak;
-    }
-
-    public myTextArea getExteriorSummary() {
-        return exteriorSummary;
-    }
-
-    public myComboBox<String> getBrakeFluidLevel() {
-        return brakeFluidLevel;
-    }
-
-    public myComboBox<String> getBrakeFront() {
-        return brakeFront;
-    }
-
-    public myComboBox<String> getBrakeRear() {
-        return brakeRear;
-    }
-
-    public myComboBox<String> getEmergencyBrake() {
-        return emergencyBrake;
-    }
-
-    public myTextArea getBrakeSummary() {
-        return brakeSummary;
-    }
-
-    public myComboBox<String> getEngineDamage() {
-        return engineDamage;
-    }
-
-    public myComboBox<String> getEngineOil() {
-        return engineOil;
-    }
-
-    public myComboBox<String> getEngineOilColor() {
-        return engineOilColor;
-    }
-
-    public myComboBox<String> getBrakeFluidCondition() {
-        return brakeFluidCondition;
-    }
-
-    public myComboBox<String> getBrakeFluidColor() {
-        return brakeFluidColor;
-    }
-
-    public myComboBox<String> getEngineOilLeak() {
-        return engineOilLeak;
-    }
-
-    public myTextArea getEngineSummary() {
-        return engineSummary;
-    }
-
-    public myTextArea getCustomerFeedback() {
-        return customerFeedback;
-    }
+//    //GETTERS FOR JSON CONVERSION
+//    public String getTruckSerialNumber() {
+//        return truckSerialNumber.getText();
+//    }
+//
+//    public String getTruckModel() {
+//        return truckModel.getText();
+//    }
+//
+//    public String getInspectorName() {
+//        return inspectorName.getText();
+//    }
+//
+//    public myFormattedTextField getEmpID() {
+//        return empID;
+//    }
+//
+//    public Date getDate() {
+//        return date;
+//    }
+//
+//    public myTextField getCurrentLocation() {
+//        return currentLocation;
+//    }
+//
+//    public myTextField getCoordinates() {
+//        return coordinates;
+//    }
+//
+//    public myFormattedTextField getOdometerReading() {
+//        return odometerReading;
+//    }
+//
+//    public myTextField getCustomerName() {
+//        return customerName;
+//    }
+//
+//    public myTextField getCustomerID() {
+//        return customerID;
+//    }
+//
+//    public myFormattedTextField getTirePressureLF() {
+//        return tirePressureLF;
+//    }
+//
+//    public myFormattedTextField getTirePressureRF() {
+//        return tirePressureRF;
+//    }
+//
+//    public myComboBox<String> getTireConditionLF() {
+//        return tireConditionLF;
+//    }
+//
+//    public myComboBox<String> getTireConditionRF() {
+//        return tireConditionRF;
+//    }
+//
+//    public myFormattedTextField getTirePressureLR() {
+//        return tirePressureLR;
+//    }
+//
+//    public myFormattedTextField getTirePressureRR() {
+//        return tirePressureRR;
+//    }
+//
+//    public myComboBox<String> getTireConditionLR() {
+//        return tireConditionLR;
+//    }
+//
+//    public myComboBox<String> getTireConditionRR() {
+//        return tireConditionRR;
+//    }
+//
+//    public myTextArea getTireSummary() {
+//        return tireSummary;
+//    }
+//
+//    public myTextField getBatteryMake() {
+//        return batteryMake;
+//    }
+//
+//    public myTextField getBatteryReplacementDate() {
+//        return batteryReplacementDate;
+//    }
+//
+//    public myFormattedTextField getBatteryVoltage() {
+//        return batteryVoltage;
+//    }
+//
+//    public myComboBox<String> getBatteryWater() {
+//        return batteryWater;
+//    }
+//
+//    public myComboBox<String> getBatteryCondition() {
+//        return batteryCondition;
+//    }
+//
+//    public myComboBox<String> getBatteryLeakRust() {
+//        return batteryLeakRust;
+//    }
+//
+//    public myTextArea getBatterySummary() {
+//        return batterySummary;
+//    }
+//
+//    public myComboBox<String> getExteriorDamage() {
+//        return exteriorDamage;
+//    }
+//
+//    public myComboBox<String> getOilLeak() {
+//        return oilLeak;
+//    }
+//
+//    public myTextArea getExteriorSummary() {
+//        return exteriorSummary;
+//    }
+//
+//    public myComboBox<String> getBrakeFluidLevel() {
+//        return brakeFluidLevel;
+//    }
+//
+//    public myComboBox<String> getBrakeFront() {
+//        return brakeFront;
+//    }
+//
+//    public myComboBox<String> getBrakeRear() {
+//        return brakeRear;
+//    }
+//
+//    public myComboBox<String> getEmergencyBrake() {
+//        return emergencyBrake;
+//    }
+//
+//    public myTextArea getBrakeSummary() {
+//        return brakeSummary;
+//    }
+//
+//    public myComboBox<String> getEngineDamage() {
+//        return engineDamage;
+//    }
+//
+//    public myComboBox<String> getEngineOil() {
+//        return engineOil;
+//    }
+//
+//    public myComboBox<String> getEngineOilColor() {
+//        return engineOilColor;
+//    }
+//
+//    public myComboBox<String> getBrakeFluidCondition() {
+//        return brakeFluidCondition;
+//    }
+//
+//    public myComboBox<String> getBrakeFluidColor() {
+//        return brakeFluidColor;
+//    }
+//
+//    public myComboBox<String> getEngineOilLeak() {
+//        return engineOilLeak;
+//    }
+//
+//    public myTextArea getEngineSummary() {
+//        return engineSummary;
+//    }
+//
+//    public myTextArea getCustomerFeedback() {
+//        return customerFeedback;
+//    }
 
 }
